@@ -11,8 +11,11 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -61,21 +64,41 @@ public class Driver {
 	public Driver(Browser navegador) {
 		switch (navegador) {
 		case CHROME:
-			WebDriverManager.chromedriver().setup();
-			driver = new ChromeDriver();
+			startChrome();
 			break;
 		case FIREFOX:
-			WebDriverManager.firefoxdriver().setup();
-			driver = new FirefoxDriver();
+			startFirefox();
 			break;
 		case EDGE:
-			WebDriverManager.edgedriver().setup();
-			driver = new EdgeDriver();
+			startEdge();
 			break;
 		}
 		wait = new WebDriverWait(driver, 30);
 		driver.manage().window().setSize(new Dimension(1280, 720));
 		
+	}
+
+	
+	private void startFirefox() {
+		WebDriverManager.firefoxdriver().setup();
+		FirefoxOptions firefoxOptions = new FirefoxOptions();
+		boolean headless = Boolean.parseBoolean(System.getProperty("headless"));
+		
+		firefoxOptions.setHeadless(headless);
+		driver = new FirefoxDriver();
+	}
+
+	private void startChrome() {
+		WebDriverManager.chromedriver().setup();
+		ChromeOptions chromeOptions = new ChromeOptions();
+		boolean headless = Boolean.parseBoolean(System.getProperty("headless"));	
+		chromeOptions.setHeadless(headless);
+		driver = new ChromeDriver();
+	}
+	private void startEdge() {
+		WebDriverManager.edgedriver().setup();
+		EdgeOptions edgeOptions = new EdgeOptions();
+		driver = new EdgeDriver();
 	}
 
 	public static WebDriver getDriver() {
